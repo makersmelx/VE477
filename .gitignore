@@ -1,2 +1,10 @@
-
+*/.vscode/*
 *.gz
+.DS_Store
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.json
+*.tar
