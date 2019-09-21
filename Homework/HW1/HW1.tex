@@ -1,0 +1,169 @@
+\documentclass[12pt,a4paper]{article}
+%\usepackage{ctex}
+\usepackage{amsmath,amscd,amsbsy,amssymb,latexsym,url,bm,amsthm}
+\usepackage{epsfig,graphicx,subfigure}
+\usepackage{enumitem,balance}
+\usepackage{wrapfig}
+\usepackage{mathrsfs,euscript}
+\usepackage[usenames]{xcolor}
+\usepackage{hyperref}
+\usepackage[vlined,ruled,commentsnumbered,linesnumbered]{algorithm2e}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{exercise}{Exercise}
+\newtheorem*{solution}{Solution}
+\newtheorem{definition}{Definition}
+\theoremstyle{definition}
+
+
+%\numberwithin{equation}{section}
+%\numberwithin{figure}{section}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\newcommand{\postscript}[2]
+ {\setlength{\epsfxsize}{#2\hsize}
+  \centerline{\epsfbox{#1}}}
+
+\renewcommand{\baselinestretch}{1.0}
+
+\setlength{\oddsidemargin}{-0.365in}
+\setlength{\evensidemargin}{-0.365in}
+\setlength{\topmargin}{-0.3in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textheight}{10.1in}
+\setlength{\textwidth}{7in}
+\makeatletter \renewenvironment{proof}[1][Proof] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+\makeatletter
+\renewenvironment{solution}[1][Solution] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+\title{VE477 HW1}
+\author{Wu Jiayao 517370910257 }
+\date{September 2019}
+
+\begin{document}
+
+\maketitle
+
+\section{EX.1}
+\subsection{}
+	The probability is calculated as
+	\begin{align*}
+		P &= \frac{\binom{n}{k}1^k \cdot (n-1)^{n-k}}{n^k} \\
+		& = (\frac{1}{n})^k(1-\frac{1}{n})^{n-k}\binom{n}{k}
+	\end{align*}
+\subsection{}
+	The probability of exactly one slot having k hash keys is $nP_k$. If $k > \frac{1}{2}n$, there will only one slot that has k hash keys. So the probability $P_k^{'}=nP_k$. If $k \leq \frac{1}{2}n$, there may be more than one slots that have k hash keys. To ensure all of the slots with most hash keys have k hash keys, the probability $P_k^{'} \leq nP_k$.\\
+	Overall, $P_k^{'} \leq nP_k$.
+\subsection{}
+	First is to prove that $\binom{n}{x}(\frac{k}{n})^x(1-\frac{k}{n})^{n-x} < \frac{k^x}{x!}e^{-k}$
+	
+	\begin{align*}
+		f(x)&=\binom{n}{x}(\frac{k}{n})^x(1-\frac{k}{n})^{n-x}\\
+		&=\frac{n(n-1)...(n-x+1)}{x!}\cdot\frac{k^x}{n^x}(1-\frac{k}{n})^{n-x}\\
+		&=\frac{k^x}{x!}\cdot \frac{n(n-1)...(n-x+1)}{n^x} \cdot (1+\frac{1}{-\frac{n}{k}})^{(-\frac{n}{k})(-k+\frac{xk}{n})}\\
+		&< \frac{k^x}{x!} \cdot 1 \cdot e^{-k}
+	\end{align*}
+	For this problem,
+	\begin{align*}
+		P_k & = (\frac{1}{n})^k(1-\frac{1}{n})^{n-k}\binom{n}{k} \\
+			&<\frac{e^{-1}}{k!}
+	\end{align*}
+	According to Stirling formula,
+	$$
+		n! \approx \sqrt{2\pi n}(\frac{n}{e})^n
+	$$
+	which means,
+	\begin{align*}
+		P_k <\frac{e^{-1}}{k!} &\approx \frac{e^{-1}}{\sqrt{2\pi k}(\frac{k}{e})^k}\\
+		&= \frac{e^k}{k^k} \cdot \frac{e^{-1}}{\sqrt{2\pi k}}\\
+		&< \frac{e^k}{k^k}
+	\end{align*}
+\subsection{}
+	Skipped
+\subsection{}
+	\begin{align*}
+		E[M] &= \sum_{i=0}^n i\cdot P[M=i] \\
+			& \leq (k-1)\sum_{i=1}^{k-1} P_i + n \sum_{i=k}^n P_i 
+	\end{align*}
+	Select a k that $k > \frac{c \log{n}}{\log{\log{n}}}$ and $k-1 \leq \frac{c \log{n}}{\log{\log{n}}}$. We can conclude that
+	\begin{align*}
+		E[M] & \leq (k-1)\sum_{i=1}^{k-1} P_i + n \sum_{i=k}^n P_i  \\
+			& \leq \frac{c \log{n}}{\log{\log{n}}} P(M \leq \frac{c \log{n}}{\log{\log{n}}}) + n P(M>\frac{c \log{n}}{\log{\log{n}}})\\
+	\end{align*}
+	According to the conclusion in 1.4, $P(M>\frac{c \log{n}}{\log{\log{n}}}) < \frac{1}{n^2}$, therefore
+	\begin{align*}
+	E[M] &\leq \frac{c \log{n}}{\log{\log{n}}} P(M \leq \frac{c \log{n}}{\log{\log{n}}}) + n \sum_{i=k}^n \frac{1}{n^2} \\
+	& \leq \frac{c \log{n}}{\log{\log{n}}}\cdot 1+ 1
+	\end{align*}
+	As a conclusion,
+	$$
+		E[M] = \mathcal{O}(\frac{\log{n}}{\log{\log{n}}})
+	$$
+\section{EX.2}
+\begin{algorithm}[H]
+	\BlankLine
+	\SetKwInOut{Input}{input}
+	\SetKwInOut{Output}{output}
+	\caption{Determine the minimum spanning tree}\label{mst}
+	\Input{the decreased edge E(u,v), minimum spanning tree T of graph G}
+	\Output{new minimum spanning tree T'}
+	\BlankLine
+	$T' \gets T+E(u,v)$\\
+	$L_0 \gets \text{The only cycle in T' that is formed due to }E(u,v)$\\
+	$w_0 \gets \text{weight of }E(u,v)$\\
+	$E' \gets \text{The edge in } L_0 \text{ that has the largest weight}$\\
+	$T' \gets T'-E'$\\
+	$\text{return } T'$
+\end{algorithm}
+
+\section{EX.3}
+\subsection{}
+    Skipped.
+\subsection{}
+	\subsubsection{}
+    \begin{algorithm}[H]
+        \BlankLine
+        \SetKwInOut{Input}{input}
+        \SetKwInOut{Output}{output}
+    	\caption{mult(x,y)}\label{mult}
+    	\Input{two integers to multiply x,y}
+    	\Output{result of multiply n}
+    	\BlankLine
+    	\If{x=0 \textbf{or} y=0}{
+    	    \textbf{return 0}
+    	}
+    	return $mult(2x,\lfloor y/2 \rfloor)+x \times (y \ mod \ 2)$
+	\end{algorithm}
+\newpage
+	\subsubsection{}
+		\par It is to prove that when mult(x,y) is right for integers $(2m,n)$, which means $mult(2m,n)=2mn$, then mult(x,y) is also correct for $(m,2n)$,$(m,2n+1)$.
+		\par First, whether $m=0$ or $n=0$, the statement is proved true.
+		\par Then
+		$$
+			mult(m,2n) = mult(2m,n)+ 2m*0 = 2mn=m \times 2n
+		$$
+		$$
+			mult(m,2n+1) = mult(2m,n)+ 2m*1 = 2mn+2m = m \times (2n+1)
+		$$
+		\par Hence the statement is proved true. The correctness of the algorithm is proved.
+\section{EX.4}
+    \par The minimum number is 7.
+    \par Divide the 25 horses into 5 groups of 5. Each group hold one race. Record the first, second, third fastest, noted as $h_{11},h_{12},h_{13}$ for the first, second, third of group 1, for example. Current race number is 5.
+    \par Hold a race between $h_{11},h_{21},h_{31},h_{41},h_{51}$, record the first, second,third as $h_{61},h_{62},h_{63}$. $h_{61}$ is the fastest. Current race number is 6.
+    \par Suppose that $h_{62}$ is $h_{i1}$ and  $h_{63}$ is $h_{j1}$. Hold a race between $h_{62}$,$h_{63}$,$h_{i2}$,$h_{i3}$,$h_{j2}$. Record the first, second, third as $h_{71},h_{72},h_{73}$. $h_{71}$ is the second fastest. $h_{72}$ is the third fastest.Current number is 7.
+    
+    
+\section{EX.5}
+\subsection{}
+    \par Neither will solve the problem. A counterexample is to get $n=8$ from $S=\{2,3,5,7,9\}$ where the solution is  $\{3,5\}$
+\subsection{}
+    \par Skipped.
+\subsection{}
+    \par Problem: Use at least as possible coins to give out a combination of \$51. You have coins with value \$40, \$25, \$7, \$2, \$1.
+    \par According to greedy algorithm, locally optimal is given by \$40,\$7,\$2,\$2, four coins.
+    \par But actually the globally optimal is given by \$25,\$25,\$1, three coins.
+\end{document}
