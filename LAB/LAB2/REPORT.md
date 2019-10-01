@@ -3,7 +3,11 @@
 <center>Wu Jiayao 517370910257</center>
 ## 1. C programming
 
-### 1.1 Kruskal implementation
+### 1.1 Kruskal and Prim implementation
+
+Kruskal is implemented in kruskal.c, prim in prim.c
+
+To test them in the program, for line 22 and 23 in main.c, just uncomment one and comment another.
 
 lab2.h
 
@@ -93,6 +97,60 @@ int kruskal(int e)
             Union(u, v);
         }
     }
+    return num;
+}
+
+~~~
+
+prim.c
+
+~~~c
+#include "lab2.h"
+int prim(int e, int v)
+{
+    int *edgeMark = malloc(sizeof(int) * e);
+    int *used = malloc(sizeof(int) * v);
+    int finished = 0;
+    int num = 0;
+    for (int i = 0; i < v; i++)
+    {
+        used[i] = 0;
+    }
+    for (int i = 0; i < e; i++)
+    {
+        edgeMark[i] = 0;
+    }
+    while (finished == 0)
+    {
+        for (int i = 0; i < e; i++)
+        {
+            if (edgeMark[i] == 1)
+                continue;
+            if (i == 0 || used[graph[i].u] + used[graph[i].v] == 1)
+            {
+                used[graph[i].u] = 1;
+                used[graph[i].v] = 1;
+                edgeMark[i] = 1;
+                res[num].u = graph[i].u;
+                res[num].v = graph[i].v;
+                num++;
+                break;
+            }
+        }
+        for (int i = 0; i < v; i++)
+        {
+            if (used[i] == 0)
+            {
+                break;
+            }
+            if (i == v - 1)
+            {
+                finished = 1;
+            }
+        }
+    }
+    free(edgeMark);
+    free(used);
     return num;
 }
 
