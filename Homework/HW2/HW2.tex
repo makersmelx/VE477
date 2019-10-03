@@ -1,0 +1,348 @@
+\documentclass[12pt,a4paper]{article}
+%\usepackage{ctex}
+\usepackage{amsmath,amscd,amsbsy,amssymb,latexsym,url,bm,amsthm}
+\usepackage{epsfig,graphicx,subfigure}
+\usepackage{enumitem,balance}
+\usepackage{wrapfig}
+\usepackage{mathrsfs,euscript}
+\usepackage[usenames]{xcolor}
+\usepackage{hyperref}
+\usepackage[vlined,ruled,commentsnumbered,linesnumbered]{algorithm2e}
+\usepackage{enumerate}
+\usepackage{forest}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{exercise}{Exercise}
+\newtheorem*{solution}{Solution}
+\newtheorem{definition}{Definition}
+\theoremstyle{definition}
+
+
+%\numberwithin{equation}{section}
+%\numberwithin{figure}{section}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\newcommand{\postscript}[2]
+ {\setlength{\epsfxsize}{#2\hsize}
+  \centerline{\epsfbox{#1}}}
+
+\renewcommand{\baselinestretch}{1.0}
+
+\setlength{\oddsidemargin}{-0.365in}
+\setlength{\evensidemargin}{-0.365in}
+\setlength{\topmargin}{-0.3in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textheight}{10.1in}
+\setlength{\textwidth}{7in}
+\makeatletter \renewenvironment{proof}[1][Proof] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+\makeatletter
+\renewenvironment{solution}[1][Solution] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+\title{VE477 HW2}
+\author{Wu Jiayao 517370910257 }
+\date{October 2019}
+
+\begin{document}
+
+\maketitle
+\section{Ex. 1 — Basic complexity}
+\subsection{}
+Let $T(n)$ be the equation on the left of $=$. \\
+\newline
+\textbf{a)} Choose $n_0 =1$ and $c=1+3+1+1=6$, so that for any $n \textgreater n_0$, 
+$$
+  T(n) \leq n^3+3n^3+n^3+1 = c \cdot n^3
+$$. 
+Hence, $T(n) = \mathcal{O} (n^3)$.
+Choose $n_0 =10$ and $c=\frac{1}{4}$, so that for any $n \textgreater n_0$, 
+$$
+  T(n) \geq n^3-\frac{3}{10}n^3-\frac{1}{100}n^3+1 \geq \frac{69}{100} \cdot n^3 \geq c \cdot n^3
+$$. 
+Hence, $T(n) = \Omega (n^3)$.
+Hence, 
+$$
+  T(n) = \Theta(n^3)
+$$
+\newline
+\textbf{b)} Choose $n_0 = 4$ and $c = 1$. Transform as followed.
+$$
+  \ln(2^n) = n\ln(2)
+$$
+
+$$
+\ln(n^2) = 2ln(n)
+$$
+When $n>4$
+$$
+\frac{d}{dn}2\ln(n)=\frac{2}{n} \textless \frac{d}{dn}n\ln(2) = \ln(2) 
+$$
+Hence, when $n>4$
+$$
+  n^2 \textless 2^n
+$$
+Hence, for $\forall n>4$, there exists $c=1$ that
+$$
+  n^2 < c \cdot 2^n
+$$
+which means,
+$$
+  n^2 =\mathcal{O}(2^n)
+$$
+\newline
+
+\subsection{}
+\textbf{a)} $\forall n>1$, there exists $c=2$ that
+$$
+  f(n)=n\sqrt{n}<n^2<2n^2-n^2<2(n^2-1)=c \cdot g(n)
+$$
+
+$$
+  f(n)=\mathcal{O}g(n)
+$$
+\subsection{}
+\textbf{a)} Do not exist\\
+\newline
+\textbf{b)} $f(n)=n,g(n)=1$
+\subsection{}
+When $n \rightarrow \infty$
+$$
+  f_4(n) >f_1(n) >f_3(n) > f_2(n)
+$$
+\newline
+First,
+$$
+  \frac{f_3(n)}{f_2(n)}=\frac{\sqrt{n}}{\sqrt{\log(n)}} > 1 \Rightarrow f_3 > f_2
+$$
+\newline
+Since $\sqrt{n} > \sqrt{\log(n)}$
+$$
+  f_3 < n \sqrt{n} = n^{\frac{3}{2}} < 24n^{\frac{3}{2}} <f_4
+$$
+\newline
+To compare $f_3$ with $f_1$
+$$
+  f_1(n)=\sum_{i=1}^{n/2}(\sqrt{i}+\sqrt{n+1-i}) > \frac{n}{2}(\sqrt{n}+1)
+$$
+
+$$
+  f_3(n)=\frac{n}{2}(2\sqrt{\log(n)})
+$$
+\newline
+When $n>16$
+$$
+(\sqrt{n}+1)^2-(2\sqrt{\log(n)})^2>n-4\log(n)>0
+$$
+\newline
+Therefore,
+$$
+\sqrt{n}+1 > 2\sqrt{\log(n)}
+$$
+\newline
+which means, $\forall n>16$
+$$
+  f_1(n)> \frac{n}{2}(\sqrt{n}+1) > \frac{n}{2}(2\sqrt{\log(n)}) = f_3(n)
+$$
+\newline
+What's more, $\forall n>1$
+$$
+  f_4(n)>n\sqrt{n}>f_1(n)
+$$
+\section{Ex. 2 Master Theorem}
+\subsection{}
+\textbf{a)} 
+\begin{center}
+  \begin{forest}
+  [$f(n)$,draw
+    [$f(n/b)$,draw
+      [$f(n/b^2)$,draw
+        [$\cdots$]
+        [$\cdots$]
+        [$\cdots$]
+      ]
+      [$\cdots$]
+      [$f(n/b^2)$,draw
+        [$\cdots$]
+        [$\cdots$]
+        [$\cdots$]
+      ]
+    ]
+    [$\cdots$]
+    [$\cdots$]
+    [$\cdots$]
+    [$\cdots$]
+    [$\cdots$]
+    [$f(n/b)$,draw
+      [$f(n/b^2)$,draw
+        [$\cdots$]
+        [$\cdots$]
+        [$\cdots$]
+      ]
+      [$\cdots$]
+      [$f(n/b^2)$,draw
+        [$\cdots$]
+        [$\cdots$]
+        [$\cdots$]
+      ]
+    ]
+  ]
+  \end{forest}
+  $$\cdots \cdots$$
+  \end{center}
+  \begin{forest}
+    [
+      [$f(1)$]
+      [$\cdots$]
+      [$\cdots$]
+    ]
+  \end{forest}
+\newline
+Each node has $b$ child nodes. \\
+\textbf{b)} \\
+The depth of the tree is $\log _bn+1$. \\
+The number of the leaves is $a^{\log_bn}$. \\
+The total cost at depth k is $a^{k} \cdot f(\frac{n}{b^k})$ \\
+We can conclude that
+\begin{align*}
+  T(n) &= \sum_{j=0}^{\log_bn}a^jf(\frac{n}{b^j})\\
+  &= \sum_{j=0}^{\log_bn-1}a^jf(\frac{n}{b^j})+a^{\log_bn}f(1)\\
+  &= \sum_{j=0}^{\log_bn-1}a^jf(\frac{n}{b^j})+\Theta(a^{\log_bn})\\
+  &= \sum_{j=0}^{\log_bn-1}a^jf(\frac{n}{b^j})+\Theta(n^{\log_ba})
+\end{align*}
+where,
+$$
+  a^{\log_bn}=a^{\frac{\log_an}{\log_ab}}=n^{-\log_ab}=n^{\log_ba}
+$$
+\subsection{}
+\textbf{a)i.} Since $f(n)=\Theta (n^{log_ba})$, there exists $n_0^{'} = n_0 \cdot b^j$,and $c_1 \textgreater 0,c_2 \textgreater 0$ that $\forall n>n_0^{'}$
+\begin{align*}
+  c_1 \cdot \frac{n}{b^j}^{log_ba}\leq a^{j} \cdot f(\frac{n}{b^j}) = a^{j} \cdot \Theta (\frac{n}{b^j})^{\log_ba} \leq c_2 \cdot \frac{n}{b^j}^{log_ba} 
+\end{align*}
+By adding all the $log_bn$ items together, we get that there exists $n_0^{'} = n_0 \cdot b^j$,and $c_1 \textgreater 0,c_2 \textgreater 0$ that $\forall n>n_0^{'}$
+$$
+c_1 \cdot \sum_{j=0}^{\log_bn-1}a^j(\frac{n}{b^j})^{\log_ba} \leq g(n) \leq c_2 \cdot \sum_{j=0}^{\log_bn-1}a^j(\frac{n}{b^j})^{\log_ba}
+$$
+which means that
+$$
+  g(n)=\Theta(\sum_{j=0}^{\log_bn-1}a^j(\frac{n}{b^j})^{\log_ba})
+$$
+\textbf{a)iii.}
+$$
+g(n)=\Theta\left(\sum_{j=0}^{\log _{b} n-1} a^{j}\left(\frac{n}{b^{j}}\right)^{\log _{b} a}\right) = \Theta(n^{\log _{b} a} \log _{b} n)
+$$
+\textbf{b)ii.}
+\begin{align*}
+ \sum_{i=0}^{\log _{b} n -1} a^{i}\left(n / b^{i}\right)^{\log _{b} a-\varepsilon}&=n^{\log _{b} a-\varepsilon} \sum_{i=0}^{\log _{b} n -1} a^{i} b^{-i \log _{b} a} b^{i \varepsilon}\\
+  &=n^{\log _{b} a-\varepsilon} \sum_{i=0}^{\log _{b} n -1} a^{i} a^{-i} b^{i \varepsilon} \\
+  &=n^{\log _{b} a-\varepsilon} \sum_{i=0}^{\log _{b} n -1} b^{\varepsilon i}\\
+  &=n^{\log _{b} a-\varepsilon} \frac{b^{\varepsilon\left(\log _{b} n\right)}-1}{b^{\varepsilon}-1}\\
+  &=n^{\log _{b} a-\varepsilon} \frac{n^{\varepsilon}-1}{b^{\varepsilon}-1}
+\end{align*}
+\textbf{b)iii.}
+\begin{align*}
+  g(n) =n^{\log _{b} a-\varepsilon} \frac{n^{\varepsilon}-1}{b^{\varepsilon}-1}=n^{\log _{b} a-\varepsilon} \frac{n^{\varepsilon}-1}{b^{\varepsilon}-1} \leq n^{\log _{b} a-\varepsilon} \frac{n^{\varepsilon}}{b^{\varepsilon}-1}=n^{\log _{b} a} \frac{1}{b^{\varepsilon}-1}
+\end{align*}
+Therefore,
+$$
+  g(n) = \mathcal{O}(n^{\log_ba})
+$$
+\subsection{}
+\textbf{i.} Take $c=1,n_0=1$, we observe that
+$$
+g(n)=\sum_{j=0}^{\log _{b} n-1} a^{j} f\left(n / b^{j}\right)=f(n)+\sum_{j=1}^{\log _{b} n-1} a^{j} f\left(n / b^{j}\right)>f(n)
+$$
+Hence, 
+$$
+  g(n)=\Omega(f(n))
+$$
+\textbf{ii.} Let $t=n/b^{j-1}$
+$$
+a^{j} f\left(n / b^{j}\right)=a^{j} f(t / b)=a^{j-1}\cdot af(t / b) \leq a^{j-1} c f(t)=c \cdot a^{j-1} f(n/b^{j-1})
+$$
+Similarly,
+$$
+a^{j} f\left(n / b^{j}\right) \leq c \cdot a^{j-1} f(n/b^{j-1}) \leq c^2 \cdot a^{j-2} f(n/b^{j-2}) \leq \cdots \leq c^jf(n)
+$$
+\textbf{iv.} Since $c<1$
+\begin{align*}
+  g(n)&=\sum_{j=0}^{\log n-1} a^{j} f\left(n / b^{j}\right) \\
+  &= a^{0} f\left(n / b^{0}\right)+a^1 f(n / b^1)+a^{2} f\left(n / b^{2}\right)+\cdots+a^{\log _{b} n-1} f\left(n / b^{\log _{b} n-1}\right)\\
+  &\leq f(n)+cf(n)+c^2f(n)+ \cdots c^{\log_bn-1}f(n) \\
+  & < \frac{1}{1-c}f(n)
+\end{align*}
+Take $c_1=1$,$c_2=\frac{1}{1-c},n_0=1$, $\forall n > n_0$
+$$
+  c_1 f(n) \leq g(n) \leq c_2f(n)
+$$
+Hence,
+$$
+  g(n)=\Theta(f(n))
+$$
+\subsection{}
+Consider the recurrence $T(n)=a T(n / b)+f(n)$, where $a$,$b$ are constants, n is an exact power of b. Then
+\begin{align*}
+	T(n) = \left\{
+	\begin{aligned}
+	&\Theta(n^{log_ba}) \ \ & f(n) &= \Theta(n^{log_ba})\\
+	& \Theta(n^{log_ba})\ \ \  & f(n) &= O(n^{log_ba- \varepsilon}) \\
+	& \Theta(f(n))\ \  & f(n) &\geq  \frac{a}{c}f(n/b)
+	\end{aligned}
+	\right.
+\end{align*}
+\section{Ex. 3 Ramanujam numbers}
+\begin{algorithm}[H]
+  \SetKwFunction{RamanH}{RamanHelper}
+  \SetKwInOut{Input}{input}
+	\SetKwInOut{Output}{output}
+  \Input{An integer n}
+  \Output{All Ramanujam numbers smaller or equal to $n$}
+  i $\gets$ 2\;
+  cubeSum\_list $\gets$ [] \;
+  \While{1}{
+    \If{$i^3 \geq n$}{
+      break;
+    }
+    \For{all $j \textless i$}{
+      \If{$i^3+j^3 \leq n$}{
+          Push ($i^3 + j^3$) into cubeSum\_list\;
+      }
+    }
+    i++;
+  } 
+    \For{All the numbers in $cubeSum\_list$}{
+    \KwRet{All the numbers that have occurred twice}
+  }
+  
+\end{algorithm}	
+There are at most $1^2+2^2+\cdots+\sqrt[3]{n}^2=\mathcal{O}(n)$ iterations. $cubeSum\_list$ contains at most $2n$ elements. The complexity is $\mathcal{O}(n)$, calculated as
+$$
+  \mathcal{O}(n)+2n = \mathcal{O}(n)
+$$
+\section{Ex. 4 Critical Thinking}
+Suppose that No.1 pirate is the most senior pirate. \\
+\textbf{Situation 1:} When there is only one pirate left, No.6. He can get 300. \\
+\textbf{Situation 2:} When there are two left, No. 5 and No.6, No.5 will give himself 300, No.6 0. Since No.5 will agree with his distribution (1 of 2 agrees), it's ok. \\
+\textbf{Situation 3:} When there are three left, No.4 - No.6. However No.4 distributes, No.5 will vote NO to get into Situation 2. Hence, No,5 will be distributed 0. To avoid Situation 2, No.6 will vote YES if he gets at least 1. No.6 will be distributed 1.\\
+\textbf{Situation 4:} When there are four left, No.3 - No.6. No.3 needs two votes. No.4 will always vote NO to get 299 in Situation 3, where No.5 could get nothing. Hence, No.5 will vote YES if distributed at least 1. Then here are two votes. No.5 will be distributed 1, No.4 himself 299. \\
+\textbf{Situation 5:} When there are five left, three votes are needed. Similarly, No.3 will vote NO to get more in Situation 4. Since No.4 and No.6 could get nothing in Situation 4, they will vote YES if distributed at least 1. Hence, No.2 298, No.4 1, No.6 1. \\
+\textbf{Situation 6:} It works the same. No.3 and No.5 will vote YES if distributed at least 1. Hence, No.1 298, No.3 1, No.5 1.
+
+It works like this.
+\begin{table}[!htbp]
+  \centering
+  \begin{tabular}{|c|c|c|c|c|c|c|}
+  \hline
+  pirates alive & 1 & 2 & 3 & 4 & 5 & 6 \\ \hline
+  1 & X & X & X & X & X & 300 \\
+  2 & X & X & X & X & 300 & 0\\
+  3 & X & X & X & 299 & X & 1 \\
+  4 & X & X & 299 & 0 & 1 & 0 \\
+  5 & X & 298 & 0 & 1 & 0 & 1 \\
+  6 & 298 & 0 & 1 & 0 & 1 & 0 \\
+  \hline
+  \end{tabular}
+  \end{table}
+\end{document}
