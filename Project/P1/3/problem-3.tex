@@ -1,0 +1,136 @@
+\documentclass[catalog.tex]{subfiles}
+
+% do not write anything in the preamble
+
+\begin{document}
+
+\def\pbname{Priority queues} %change this, do not use any number, just the name
+
+\section{\pbname} 
+
+% only for overview, so short description (no more than 1-2 lines)
+\begin{overview}
+\item [Algorithm:] Maintain a sequence according to the priority of each element. 
+	% -	must match the label of the algorithm 
+	% - when writing more than one algo use alg:\currfilebase_a, alg:\currfilebase_b, etc.
+\item [Input:] A sequence that each of its element has a priority value
+\item [Complexity:] $\mathcal{O}(\log n)$ for maintenance
+\item [Data structure compatibility:] Heap
+\item [Common applications:] Optimize Dijkstra's algorithm, optimize Prim's algorithm for minimum spanning tree
+\end{overview}
+
+
+\begin{problem}{\pbname}
+	A priority queue is a data structure whose all elements are sorted by their priority. There are algorithms that maintains the priority queue when elements are added or removed.
+\end{problem}
+
+\subsection*{Description}
+\subsubsection{Problem Clarification}
+Suppose we have an array and an algorithm that compares priority between elements, we wish to maintain the array all time with such principle: whatever the order in which elements are enqueued, the element with high priority is at the front of the one with low priority.
+\subsubsection{Algorithm Clarification}
+A priority queue is a data structure for maintaining a set $S$ of elements. Priority is measured by a value of each element named $k$. For the priority queue discussed here,it is implemented by heap. A heap is a data structure based on complete binary tree and has the property that for any element $i$ other than the root in heap $A$,
+$$
+	A[\lfloor i/2 \rfloor] \leq A[i] \text{, for min-heap}
+$$
+Or
+$$
+	A[\lfloor i/2 \rfloor] \geq A[i] \text{, for max-heap}
+$$
+A priority queue should support operations as followed: ~\cite{intro3rd}
+\begin{enumerate}
+	\item $insert(S,x)$ which inserts the element $x$ into the set $S$.
+	\item $pop(S)$ which removes and returns the element of $S$ with the highest priority.
+	\item $top(S)$ which returns the element of $S$ with the highest priority.
+\end{enumerate}
+\newpage
+\subsubsection{Complexity}
+Since a heap of n elements is based on a complete binary tree, we can know that its height is $\Theta(\log n)$. All the operations on the priority queue or on the heap have a running time that is at most the height of the heap. \\
+The time complexity for $insert(S,x)$ is $\mathcal{O}(\log n)$. \\
+The time complexity for $pop(S)$ is $\mathcal{O}(\log n)$.~\cite{ve477}
+The time complexity for $top(S)$ is $\mathcal{O}(1)$. \\
+
+
+% add comment in the pseudocode: \cmt{comment}
+% define a function name: \SetKwFunction{shortname}{Name of the function}
+% use the defined function: \shortname{$variables$}
+% use the keyword ``function'': \Fn{function name}, e.g. \Fn{\shortname{$var$}}
+
+\begin{Algorithm}[$insert(S,x)$\label{alg:\currfilebase_b}]
+	% -	must match the reference in the overview
+	% - when writing more than one algo use alg:\currfilebase_a, alg:\currfilebase_b, etc.
+	%\SetKwFunction{myfunction}{MyFunction}	
+	\Input{The array to add into $A$, the element to be added $x$}
+	\Output{None}
+	%	\Fn{\myfunction{$a,b$}}{
+	%	}
+	\BlankLine
+	A.size++ \\
+	$A[A.size] \gets x$ \\
+	$i \gets A.size$ \\
+	\While{$i \textgreater 1$ $\textbf{and}$ $A[\lfloor i / 2\rfloor].key \textless A[i].key$}{
+		swap $A[i]$ with $A[\lfloor i / 2\rfloor]$ \\
+		$i \gets \lfloor i / 2\rfloor$
+	}
+	\Ret
+
+\end{Algorithm}
+
+
+
+\begin{Algorithm}[$pop(S)$\label{alg:\currfilebase_d}]
+	% -	must match the reference in the overview
+	% - when writing more than one algo use alg:\currfilebase_a, alg:\currfilebase_b, etc.
+	\SetKwFunction{myfunction}{maintain}	
+	\Input{The array to add into $A$,the function that compares priority $fn$}
+	\Output{The element in $A$ with the highest priority}
+	\BlankLine
+	\Fn{\myfunction{$A,i$}}{
+		$l \gets 2i$ \\
+		$r \gets 2i+1$ \\
+		\If{$l \leq A.size$ \textbf{and} $A[l] > A[i]$}{
+			$largest \gets l$
+		}
+		\Else{
+			$largest \gets i$
+		}
+		\If{$r \leq A.size$ \textbf{and} $A[r] > A[largest]$}{
+			$largest \gets r$
+		}
+		\If{$largest \neq i$}{
+			swap $A[i]$ with $A[largest]$ \\
+			$maintain(A,largest)$
+		}
+	}
+	\BlankLine
+	max $\gets$ A[1] \\
+	A[1] $\gets$ A[A.size] \\
+	A.size-- \\
+	\myfunction{$A,1$} \\
+	\Ret max;
+\end{Algorithm}
+
+\begin{Algorithm}[$top(S)$\label{alg:\currfilebase_c}]
+	% -	must match the reference in the overview
+	% - when writing more than one algo use alg:\currfilebase_a, alg:\currfilebase_b, etc.
+	%\SetKwFunction{myfunction}{MyFunction}	
+	\Input{The array to $A$}
+	\Output{The element in $A$ with the highest priority}
+	%	\Fn{\myfunction{$a,b$}}{
+	%	}
+	\BlankLine
+
+	\Ret A[1]
+
+\end{Algorithm}
+
+\newpage
+% include references where to find information on the given problem using latex bibliography
+% insert references in the text (\cite{}) and write bibliography file in problem-nb.bib (replace nb with the problem number)
+% prefer books, research articles, or internet sources that are likely to remain available over time
+% as much as possible offer several options, including at least one which provide a detailed study of the problem
+% if available include links to programs/code solving the problem
+% wikipedia is NOT acceptable as a unique reference
+\singlespacing
+\printbibliography[title={References.},resetnumbers=true,heading=subbibliography]
+
+\end{document}

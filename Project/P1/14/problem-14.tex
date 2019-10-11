@@ -1,0 +1,232 @@
+\documentclass[catalog.tex]{subfiles}
+
+% do not write anything in the preamble
+
+\begin{document}
+
+\def\pbname{Sorting (Merge sort, quick sort, heap sort)} %change this, do not use any number, just the name
+
+\section{\pbname} 
+
+% only for overview, so short description (no more than 1-2 lines)
+\begin{overview}
+\item [Algorithm:] Sorting (Merge sort~(algo.~\ref{alg:\currfilebase_a}), quick sort~(algo.~\ref{alg:\currfilebase_c}), heap sort~(algo.~\ref{alg:\currfilebase_d})) 
+	% -	must match the label of the algorithm 
+	% - when writing more than one algo use alg:\currfilebase_a, alg:\currfilebase_b, etc.
+\item [Input:] An unsorted array
+\item [Complexity:] $\mathcal{O}(n\log n)$ for all of three
+\item [Data structure compatibility:] Heap for heap sort, array for merge sort and quick sort
+\item [Common applications:] Foundation for algorithms (i.e. binary search requires sorted sequence), Data processing in excels and tables
+\end{overview}
+
+
+\begin{problem}{\pbname}
+	A sorting algorithm places elements of an sequence in a certain order.
+\end{problem}
+
+
+\subsection*{Description}
+\subsubsection{Problem Description}
+Sorting is a fundamental problem in algorithms. Quite a few search or graph algorithm requires a sorted sequence as input. When studying sorting algorithm, the concept of an \textbf{in place} algorithm is needed. An \textbf{in place} algorithm is an algorithm that requires $\mathcal{O}(1)$ extra space.
+\subsubsection{Algorithm Description}
+A sorting probem is defined as followed:~\cite{intro3rd} \\
+\textbf{Input: }A sequence of $n$ numbers $(a_1,a_2,\cdots,a_n)$. \\
+\textbf{Output: }A permutation $(a_1^{'},a_2^{'},\cdots,a_n^{'})$ of the input sequence such that $a_1^{'} \leq a_2^{'} \leq \cdots \leq a_n^{'}$\\
+\subsubsection{Merge sort}
+Merge sort is a divide-and-conquer algorithm. It keeps merging two sorted sequences into a new sorted sequences. Let $T(i)$ be the time of sorting $i$ elements. Since merging two sequence together takes $\mathcal{O}(N)$ time, scanning at most all the elements.
+$$
+	T(N)=2T(N/2)+N;
+$$
+According to Master Theorem, the complexity of merge sort can be expressed as
+$$
+	T(N)=\mathcal{O}(N \log N)
+$$
+% add comment in the pseudocode: \cmt{comment}
+% define a function name: \SetKwFunction{shortname}{Name of the function}
+% use the defined function: \shortname{$variables$}
+% use the keyword ``function'': \Fn{function name}, e.g. \Fn{\shortname{$var$}}
+\begin{Algorithm}[$mergeSort(A,l,r)$\label{alg:\currfilebase_a}]
+	% -	must match the reference in the overview
+	% - when writing more than one algo use alg:\currfilebase_a, alg:\currfilebase_b, etc.
+	%\SetKwFunction{myfunction}{MyFunction}	
+	\Input{A subsequence of $A$: $A[l:r+1]$}
+	\Output{A sorted sequence $C$ with $r-l+1$ numbers}
+	%	\Fn{\myfunction{$a,b$}}{
+	%	}
+	\BlankLine
+	\If{$l \geq r$}{
+		\Ret
+	}
+	$mid$ $\gets$ $(l+r)/2$ \\
+	$mergeSort(A,l,mid)$ \\
+	$mergeSort(A,mid+1,r)$ \\
+	\cmt{Merge the left sequence and right sequence togther.} \\
+	$i$ $=$ $j$ $=$ $k$ $=$ $0$ \\
+	\While{$i < (mid-l+1)$ \textbf{and} $j < (r-mid)$}{
+		\If{$A[i] \leq B[j]$}{
+			$C[k++]=A[j++]$
+		}
+		\Else{
+			$C[k++]=B[j++]$
+		}
+	}
+	\If{$i = (mid-l+1)$}{
+		Append $B[j:r+1]$ to $C$.
+	} 
+	\Else{
+		Append $A[i:mid+1]$ to $C$.
+	}
+	\Ret $C$
+
+\end{Algorithm}
+
+Since merge sort takes $\mathcal{O}(N)$ extra place to store the stored sequence, it is not an \textbf{in place} algorithm.
+Another implementation of merge sort takes $\mathcal{O}(1)$ extra place, which is \textbf{in place}.
+\newpage
+\begin{Algorithm}[$inPlaceMergeSort(A,l,r)$\label{alg:\currfilebase_b}]
+	% -	must match the reference in the overview
+	% - when writing more than one algo use alg:\currfilebase_a, alg:\currfilebase_b, etc.
+	%\SetKwFunction{myfunction}{MyFunction}	
+	\Input{A subsequence of $A$: $A[l:r+1]$}
+	\Output{Sorted sequence $A$}
+	%	\Fn{\myfunction{$a,b$}}{
+	%	}
+	\BlankLine
+	\BlankLine
+	\If{l \textbf{$\geq$} r}{
+		\textbf{return}
+	}
+	MergeSort($A$,$l$,$n/2$) \\
+	MergeSort($A$,$n/2+1$,$r$) \\
+	$i$ $\gets $ $l$ \\
+	$j$ $\gets$ $n/2+1$ \\
+	$tmp$ $\gets$ $j$ \\
+	\While{$i < r$}{
+	\While{$a[i] < a[j]$}{i++}
+	\While{$a[i] > a[j]$}{j++}
+	swap \textbf{a[i:index]} with \textbf{a[index:j]} \\
+	$i$ $\gets$ $i+j-tmp$}
+	\Ret $A$
+\end{Algorithm}
+\subsubsection{Quick sort}
+Quick sort is a divide-and-conquer algorithm. It works by placing one of the elements into its right place every time. This element is called a \textbf{pivotat}. The running time varies between $\mathcal{O}(N)$ and $\mathcal{O}(N^2)$~\cite{ve477} depending on the pivotat selected. Let $T(i)$ be the time of sorting $i$ elements. Partition the sequence around $pivot$ takes $\mathcal{O}(N)$ time, as the worst case is to scan all the elements.
+Therefore,
+$$
+	T(N)=2T(N/2)+cN
+$$
+According to Master Theorem, the average running time, thus the time complexity of quickSort sort can be expressed as
+$$
+	T(N)=\mathcal{O}(N \log N)
+$$
+Quick sort is an \textbf{in place} algorithm since $\mathcal{O}(1)$ extra place is used.
+
+\begin{Algorithm}[$quickSort(A,l,r)$\label{alg:\currfilebase_c}]
+	% -	must match the reference in the overview
+	% - when writing more than one algo use alg:\currfilebase_a, alg:\currfilebase_b, etc.
+	%\SetKwFunction{myfunction}{MyFunction}	
+	\Input{A subsequence of $A$: $A[l:r+1]$}
+	\Output{Sorted sequence $A$ }
+	%	\Fn{\myfunction{$a,b$}}{
+	%	}
+	\BlankLine
+	\If{$l \geq r$}{
+		\Ret
+	}
+	$pivotIndex$ $\gets$ a random number between $l$ and $r$ \\
+	swap $A[pivotIndex]$ and $A[0]$ \\
+	$pivot$ $\gets$ $A[0]$ \\
+	$i$ $\gets$ $1$ \\
+	$j$ $\gets$ $N-1$ \\
+	\cmt{Partition the sequence around pivot}
+	\While{$i<j$}{
+		\While{$A[i] < pivot$}{
+			$i++$
+		}
+		\While{$A[j] \geq pivot$}{
+			$j--$
+		}
+		\If{$i<j$}{
+			swap $A[i]$ with $A[j]$ \\
+		}
+	}
+	swap $A[0]$ and $A[j]$ \\
+	$quickSort(A,l,j-1)$ \\
+	$quickSort(A,j+1,r)$ \\
+	\Ret $A$
+
+\end{Algorithm}
+
+\subsubsection{Heap Sort}
+Heap sort is based on data structure \textbf{heap}. A heap is based on a complete binary tree, has the property that for any node other than the root~\cite{intro3rd}
+$$
+	A[\lfloor i / 2\rfloor] \leq A[i]
+$$
+Procedures that are used in heap sort shows in the following.~\cite{ve281}
+\begin{enumerate}
+	\item The $maintain$ procedure is to maintain the property of a heap. 
+	\item The $buildHeap$ procedure is to produces a heap from an unsorted array.
+\end{enumerate}
+Since the height of a complete bianry tree of $N$ elements is $\Theta(\log N)$, $maintain$ takes $\mathcal{O}(\log N)$ running time. For one complete heap sort, there are $\mathcal{O}(N)$ loops. Therefore, the time complexity of heap sort can be expressed as
+$$
+	T(N) = \mathcal{O}(N) \times \mathcal{O}(\log N) = \mathcal{O}(N\log N)
+$$
+
+\begin{Algorithm}[$heapSort(A)$\label{alg:\currfilebase_d}]
+	% -	must match the reference in the overview
+	% - when writing more than one algo use alg:\currfilebase_a, alg:\currfilebase_b, etc.
+	\SetKwFunction{myfunction}{maintain}
+	\SetKwFunction{anotherfunction}{buildHeap}
+	\Input{An unsorted sequence $A$}
+	\Output{None}
+	%	\Fn{\myfunction{$a,b$}}{
+	%	}
+	\Fn{\myfunction{$A,i$}}{
+		$l \gets 2i$ \\
+		$r \gets 2i+1$ \\
+		\If{$l \leq A.heap\_size$ \textbf{and} $A[l] > A[i]$}{
+			$largest \gets l$
+		}
+		\Else{
+			$largest \gets i$
+		}
+		\If{$r \leq A.heap\_size$ \textbf{and} $A[r] > A[largest]$}{
+			$largest \gets r$
+		}
+		\If{$largest \neq i$}{
+			swap $A[i]$ with $A[largest]$ \\
+			$maintain(A,largest)$
+		}
+	}
+	\Fn{\anotherfunction{$A,i$}}{
+		$A.heap\_size$ $\gets$ $A.length$ \\
+		\For{$i=\lfloor A \cdot \operatorname{length} / 2\rfloor$ \textbf{downto} $1$}{
+			\myfunction{$A$,$i$}
+		}
+	}
+	\BlankLine
+	
+	\anotherfunction($A$) \\
+	\For{$i=A.length$ \textbf{downto} $2$}{
+			swap $A[1]$ with $A[i]$ \\
+			$A.heap\_size--$\\
+			\myfunction{$A$,$i$}
+		}
+	\Ret
+
+
+\end{Algorithm}
+\newpage
+
+
+
+
+% include references where to find information on the given problem using latex bibliography
+% insert references in the text (\cite{}) and write bibliography file in problem-nb.bib (replace nb with the problem number)
+% prefer books, research articles, or internet sources that are likely to remain available over time
+% as much as possible offer several options, including at least one which provide a detailed study of the problem
+% if available include links to programs/code solving the problem
+% wikipedia is NOT acceptable as a unique reference
+\singlespacing
+\printbibliography[title={References.},resetnumbers=true,heading=subbibliography]
+
+\end{document}
