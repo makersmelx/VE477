@@ -1,0 +1,160 @@
+\documentclass[12pt,a4paper]{article}
+%\usepackage{ctex}
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage{amsmath,amscd,amsbsy,amssymb,latexsym,url,bm,amsthm}
+\usepackage{epsfig,graphicx,subfigure}
+\usepackage{enumitem,balance}
+\usepackage{wrapfig}
+\usepackage{mathrsfs,euscript}
+\usepackage[usenames]{xcolor}
+\usepackage[colorlinks,linkcolor = blue]{hyperref}
+\usepackage[vlined,ruled,commentsnumbered,linesnumbered]{algorithm2e}
+\usepackage{listings}
+\usepackage[utf8]{inputenc}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{exercise}{Exercise}
+\newtheorem*{solution}{Solution}
+\newtheorem{definition}{Definition}
+\theoremstyle{definition}
+
+
+%\numberwithin{equation}{section}
+%\numberwithin{figure}{section}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\newcommand{\postscript}[2]
+ {\setlength{\epsfxsize}{#2\hsize}
+  \centerline{\epsfbox{#1}}}
+
+\renewcommand{\baselinestretch}{1.0}
+
+\setlength{\oddsidemargin}{-0.365in}
+\setlength{\evensidemargin}{-0.365in}
+\setlength{\topmargin}{-0.3in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textheight}{10.1in}
+\setlength{\textwidth}{7in}
+\makeatletter \renewenvironment{proof}[1][Proof] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+\makeatletter
+\renewenvironment{solution}[1][Solution] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+\SetKwProg{Fn}{Function}{\string:}{end}
+
+\usepackage{color}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+ 
+\lstdefinestyle{mystyle}{  
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    frame=shadowbox
+}
+\lstset{style=mystyle}
+
+\title{VE477 HW 4}
+\author{Wu Jiayao 517370910257}
+
+\begin{document}
+\maketitle
+
+\section{}
+\subsection{}
+$$
+T(2^{64})=\frac{2^{64}}{33.86 \times 10^{15}}=544.8 s 
+$$
+
+$$
+T(2^{80})=\frac{2^{80}}{33.86 \times 10^{15}}=3.6 \times 10^{7}s
+$$
+
+\subsection{}
+$$
+Nums\left(2^{64}\right)=\left\lceil\frac{2^{64}}{3.8 \times 10^{9} \times 86400}\right\rceil= 56186
+$$
+
+$$
+Nums\left(2^{80}\right)=\left\lceil\frac{2^{64}}{3.8 \times 10^{9} \times 86400 \times 31}\right\rceil= 1.19 \times 10^{8}
+$$
+
+\subsection{}
+$$
+Nums(2^{64}) = \frac{2^{64}}{8 \times 10^{12} \times 16}=1.4 \times 10^{5}
+$$
+
+$$
+Nums(2^{80}) = \frac{2^{80}}{8 \times 10^{12} \times 16}=9.4 \times 10^{9}
+$$
+
+\section{}
+\begin{enumerate}
+    \item create an array of size k with the first k elements in S,named $S^{'}$.
+    \item For the rest elements, each time when visiting an element $A[i]$, generate a random number $t = rand()\%n$, where $n$ is the size of S. If $t \leq k$, then $S^{'}[t]=A[i]$.
+\end{enumerate}
+\section{}
+\subsection{}
+\begin{algorithm}[H]
+\Input{Number of layer i}
+\Output{Sum of the ith layer}
+\Return $3^{i-1}$
+\end{algorithm}
+\subsection{}
+The complexity is $\mathcal{O}(i)$ for $3^{i-1}$.
+\section{}
+Omit.
+\section{}
+\subsection{}
+Omit
+\subsection{}
+Given a graph and a clique of k vertices, it uses at worst $\mathcal{O}(n^2)$ time to check whether the points are adjacent to each
+other. The answer can be worked out in polynomial time. Thus it is in $\mathcal{NP}$.
+\subsection{}
+Let $C_1,C_2,\cdots,C_k$ be the clauses in F. Let $x_{j,1}, x_{j,2}, x_{j,3}$ be the literals of Cj. 
+\begin{enumerate}
+    \item For each literal $x_{j,q}$, create a distinct vertex in G representing it.
+    \item Remove edges that join two vertices which are in the same clause.
+    \item Remove edges that join two vertices whose literals
+    is the negation of the others
+\end{enumerate}
+\subsection{}
+It is $\mathcal{NP}-complete$.
+\section{}
+\subsection{}
+Omit.
+\subsection{}
+Given an undirected graph $G$ and an integer k, determine whether $G$ has a independent subset of size k.
+\subsection{}
+It takes $\mathcal{O}(\left| V \right|)$ time in worst cases to check all the vertices. Since this is in polynomial time, this problem is in $\mathcal{NP}$.
+\subsection{}
+Given $G=(V,E)$, we set $G’=(V’,E’)$ to be the complement of $G$ where $V=V^{'}$, $G^{'}$ is the graph we construct.
+\subsection{}
+It is $\mathcal{NP}$-complete problem.
+\section*{Reference}
+{\noindent [1] \url{cs.nthu.edu.tw/~wkhon/toc07-lectures/lecture21.pdf}}
+\end{document}
