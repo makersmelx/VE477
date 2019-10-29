@@ -1,7 +1,5 @@
 # VE77 Course Work
 
-***
-
 ## Note
 
 This is the repository for course work and course material in VE477: Intro to Algorithm in UM-SJTU Joint Institute.  Only work that has passed submission deadline will be uploaded at present.
