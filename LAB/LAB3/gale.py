@@ -2,7 +2,7 @@ def gale(man, woman, pairNum):
     res = []
     freeM = []
     woman_cur = []
-    man_propose = [[0 for i in range (pairNum)]for i in range (pairNum)]
+    man_propose = [[0 for i in range(pairNum)]for i in range(pairNum)]
 
     for i in range(0, pairNum):
         freeM.append(i)
@@ -12,7 +12,7 @@ def gale(man, woman, pairNum):
         m = freeM[0]
         purpose_woman = 0
         while man_propose[m][man[m][purpose_woman]] == 1:
-            purpose_woman +=1;
+            purpose_woman += 1
 
         w = man[m][purpose_woman]
         man_propose[m][w] = 1
@@ -21,12 +21,10 @@ def gale(man, woman, pairNum):
             woman_cur[w] = m
         else:
             greenHat = woman_cur[w]
-            green = 0
             if woman[w].index(m) < woman[w].index(greenHat):
                 woman_cur[w] = m
                 freeM.append(greenHat)
                 freeM.pop(0)
-
 
     for i in range(0, pairNum):
         res.append([woman_cur[i], i])
@@ -35,6 +33,7 @@ def gale(man, woman, pairNum):
 
 def sortRule(list):
     return list[0]
+
 
 if __name__ == '__main__':
     pairNum = int(input().strip())
@@ -47,6 +46,6 @@ if __name__ == '__main__':
     for i in range(0, pairNum):
         woman.append(list(map(int, input().split())))
 
-    resList = gale(man,woman,pairNum)
+    resList = gale(man, woman, pairNum)
     resList.sort(key=sortRule)
     print(resList)

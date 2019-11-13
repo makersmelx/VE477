@@ -20,10 +20,9 @@ int main()
     qsort(graph, e, sizeof(Edge), Ecmp);
     //switch between kruskal and prim
 
-    //int MSTNum = kruskal(e);
-    int MSTNum = prim(e,v);
+    int MSTNum = kruskal(e);
+    //int MSTNum = prim(e,v);
 
-    
     qsort(res, MSTNum, sizeof(Result), Rcmp);
     for (int i = 0; i < MSTNum; i++)
     {

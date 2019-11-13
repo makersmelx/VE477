@@ -10,7 +10,8 @@ int kruskal(int e)
         v = graph[i].v;
         if (Find(u) != Find(v))
         {
-            
+            res[num].u = graph[i].u;
+            res[num].v = graph[i].v;
             num++;
             Union(u, v);
         }
