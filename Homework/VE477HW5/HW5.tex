@@ -1,0 +1,208 @@
+\documentclass[12pt,a4paper]{article}
+%\usepackage{ctex}
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage{amsmath,amscd,amsbsy,amssymb,latexsym,url,bm,amsthm}
+\usepackage{epsfig,graphicx,subfigure}
+\usepackage{enumitem,balance}
+\usepackage{wrapfig}
+\usepackage{mathrsfs,euscript}
+\usepackage[usenames]{xcolor}
+\usepackage[colorlinks,linkcolor = blue]{hyperref}
+\usepackage[vlined,ruled,commentsnumbered,linesnumbered]{algorithm2e}
+\usepackage{listings}
+\usepackage[utf8]{inputenc}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{exercise}{Exercise}
+\newtheorem*{solution}{Solution}
+\newtheorem{definition}{Definition}
+\theoremstyle{definition}
+
+
+%\numberwithin{equation}{section}
+%\numberwithin{figure}{section}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\newcommand{\postscript}[2]
+ {\setlength{\epsfxsize}{#2\hsize}
+  \centerline{\epsfbox{#1}}}
+
+\renewcommand{\baselinestretch}{1.0}
+
+\setlength{\oddsidemargin}{-0.365in}
+\setlength{\evensidemargin}{-0.365in}
+\setlength{\topmargin}{-0.3in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textheight}{10.1in}
+\setlength{\textwidth}{7in}
+\makeatletter \renewenvironment{proof}[1][Proof] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+\makeatletter
+\renewenvironment{solution}[1][Solution] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+\SetKwProg{Fn}{Function}{\string:}{end}
+
+\usepackage{color}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+ 
+\lstdefinestyle{mystyle}{  
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    frame=shadowbox
+}
+\lstset{style=mystyle}
+
+\title{VE477 HW 5}
+\author{Wu Jiayao 517370910257}
+
+\begin{document}
+\maketitle
+\section{The partition problem}
+\subsection{Explanation}
+Omit
+\subsection{A simple strategy}
+It is not a good solution. A counter example is partition {1,2}, {3,4} for {1,2,3,4}. It doesn't solve the partition problem.
+\subsection{Recursive Algorithm}
+Denote $s_i$ the size of $i^{th}$ group in the partition. Transform the problem into find the minium value of the larger one between the sum of the $k^{th}$ group during the partition and $M(n-s_k,k-1)$ for the $k-1$ group before. Then recursively, $M(n-s_k,k-1)$ is to calculated between the $k-1^{th}$ group and $k-2$ groups before.
+\subsection{Complexity}
+There is a total of $k \times n$ combinations. Trasversing takes at most $n^2$. Therefore,
+$$
+T(n) = \mathcal{O}(N^3)
+$$
+\subsection{Stored quantites}
+Denote $s[i]$ the element in the set. $p[i]=\sum_{k=1}^{i}s_k$ could be stored. 
+\subsection{Dynamic Programming}
+\begin{algorithm}[H]
+    \Input{A given arrangement S of non-negative numbers $s_1,s_2, \cdots,s_n$ and an integer k.}
+    \Output{Partition S into k ranges, so as to minimize the maximum sum over all the ranges}
+    $p = []$ \\
+    $p[0]\ =\ 0$ \\
+    \For{$i\ =\ 1\ to\ n$}{
+        $p[i]\ =\ s_i+p[i-1]$ \\
+    }
+    \For{$i\ =\ 1\ to\ n$}{
+        $M[i,1]\ =\ p[i]$ \\
+    }
+    \For{$j\ =\ 1\ to\ k$}{
+        $M[1,j]\ =\ s_1$ \\
+    }
+    \For{$i\ =\ 2\ to\ n-1$}{
+        \For{$j\ = 2\ to\ k$}{
+            $M[i,j]=\infty$ \\
+            \For{$x\ =\ 1\ to\ i-1$}{
+                $s\ = max(M[x,j-1],p[i]-p[x])$ \\
+                \If{$M[i,j]>s$}{
+                    $M[i,j]=s$ \\
+                    $D[i,j]=x$
+                }
+            }
+        }
+    }
+    \Return $M[n,k]$ 
+\end{algorithm}
+\subsection{Proof of correctness}
+For $n=1$ or $k=1$, all the value in matrix $M$ is correct. If $M[x,j-1]$ is correct, $M[x,j]$ is sure to be correct, and will not affect the value of $M[x,j-1]$. Hence, the algorithm is correct.
+\subsection{Time complexity}
+As written above, there are at most $k \times n \times n$ times of operations. The time complexity is $\mathcal{O}(kn^2)$.
+\subsection{Where to set the dividers}
+As already implemented above, the last position of partition is $D[n,k]$. Then combine with $M[n,k]$ to search from the back to find the value of the $k-1^{th},k-2^{th},\cdots,1^{st}$ partition.
+\section{Critical Thinking}
+We can get a generator which generates the range $0-24$ by $5 \times B()+B()$. Similarly, the range $0-624$ can be generated. Therefore, the range $0-5^{2^n},n \in \mathcal{Z^+}$ can be generated.\\
+\begin{algorithm}[H]
+    \Input{B()}
+    \Output{A random number in the range $0-n$}
+    $i$ satisfies $5^{2^{i-1}}\ <\ n+1\ <=\ 5^{2^i}$ \\
+    Let $B_i()$ be the related generator. \\
+    $num = \lfloor 5^{2^i}/(n+1) \rfloor \cdot (n+1)$ \\
+    \While{$G\ =\ B_i()\ >\ num$}{
+        continue
+    }
+    \Return $G\ \%\ (n+1)$
+\end{algorithm}
+\section{Bellman-Ford algorithm}
+\begin{algorithm}[H]
+    \Input{A directed weighted graph $G=\langle V, E\rangle$}
+    \Output{Whether there exists negative cycles}
+    Randomly choose a vertex $s$. \\
+    \ForEach{$v\ \in \ V$}{
+        \If{$v$ is $s$}{
+            $dist[v]\ =\ 0$
+        }
+        \Else{
+            $dist[v]\ =\ \infty$
+        }
+    }
+    \For{$i\ =\ 2\ to\ | V |$}{
+        \ForEach{$(u,v) \in E$}{
+            $tmp\ =\ dist[u]\ +\ weight(u,v)$ \\
+            \If{$tmp\ <\ dist[v]$}{
+                $dist[v]\ =\ tmp$
+            }
+        }
+    }
+    \For{$i\ =\ 2\ to\ | V |$}{
+        \ForEach{$(u,v) \in E$}{
+            $tmp\ =\ dist[u]\ +\ weight(u,v)$ \\
+            \If{$tmp\ <\ dist[v]$}{
+                \Return True
+            }
+        }
+    }
+    \Return False
+\end{algorithm}
+\section{Augmenting path}
+Omitted.
+\section{Wifi Problem}
+\begin{algorithm}[H]
+    \caption{$WIFI(r,l,loc,pos)$} 
+    \Input{$r,\ l\ ,locations\ of\ k\ hostpots,\ positions\ of\ n\ users$}
+    \Output{Whether all the users can connect to Wifi}
+    Create an empty graph $G \langle V, E \rangle$ \\
+    $V$ $\gets$ $V\ +\ \{s,t\}$ \\
+    \For{$i\ in\ range(0,n)$}{
+        \For{$j\ in\ range(0,k)$}{
+            \If{Distance(user $i$, hostpot $j$) $<$ $r$}{
+                Add the edge $(u[i],h[j])$to $E$ with capacity of 1
+            }
+        }
+    }
+    \For{$i\ in\ range(0,n)$}{
+        Add the edge $(s,u[i])$ to $E$ with capacity of 1 
+    }
+    \For{$i\ in\ range(0,k)$}{
+        Add the edge $(h[i],t)$ to $E$ with capacity of $l$
+    }
+    $F$ $\gets$ $Edmonds-Karp(G)$ \\
+    \Return $F\ ==\ n$
+\end{algorithm}
+The time complexity is the same as Edmonds-Karp algorithm, which is $\mathcal{O}(|V||E|^2)$. 
+Capacity of $(s, u[i])$ and $(u[i],h[j])$ is 1 means that one user can only access to one hostpot. Capacity of $(u[i],h[j])$ is $l$ restircts the max number of users . The graph is constructed that the condition of max flow happens when all the users are connected to Wifi. Hence, it is correct.
+% \section*{Reference}
+% {\noindent [1] \url{cs.nthu.edu.tw/~wkhon/toc07-lectures/lecture21.pdf}}
+\end{document}
