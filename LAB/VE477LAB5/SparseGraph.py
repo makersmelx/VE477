@@ -107,4 +107,3 @@ class SparseGraph:
                     print(column.weight, end=" ")
             print("")
         print("============================")
-

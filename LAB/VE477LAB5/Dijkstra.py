@@ -12,7 +12,8 @@ if __name__ == "__main__":
         graph.add_edge(str(u), str(v), int(w))
     s = str(input().strip("\r"))
     t = str(input().strip("\r"))
-    graph.vertice[graph.name_map[s]].prev = "You_will_never_use_this_as_node_name"
+    graph.vertice[graph.name_map[s]
+                  ].prev = "You_will_never_use_this_as_node_name"
     graph.vertice[graph.name_map[s]].distance = 0
     graph.vertice[graph.name_map[s]].visited = True
     for edge in graph.edges[graph.name_map[s]]:
@@ -45,4 +46,3 @@ if __name__ == "__main__":
     result.reverse()
     print(result)
     # print(graph.vertice[graph.name_map[t]].distance)
-
