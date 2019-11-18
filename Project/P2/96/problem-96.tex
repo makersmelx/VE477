@@ -1,0 +1,104 @@
+\documentclass[catalog.tex]{subfiles}
+
+% do not write anything in the preamble
+\begin{document}
+
+\def\pbname{A$^*$ Algorithm} %change this, do not use any number, just the name
+
+\section{\pbname} 
+
+% only for overview, so short description (no more than 1-2 lines)
+\begin{overview}
+\item [Algorithm:] Determine the shortest path between the start point and the end point~(algo.~\ref{alg:\currfilebase})
+	% -	must match the label of the algorithm 
+	% - when writing more than one algo use alg:\currfilebase_a, alg:\currfilebase_b, etc.
+\item [Input:] The start point and goal point, a graph $G \langle V,E \rangle$
+\item [Complexity:]$\mathcal{O}((b^{\epsilon})^d)$ for time complexity, $\mathcal{O}(|V|)$ for the worst space complexity
+\item [Data structure compatibility:] Priority Queue
+\item [Common applications:] Path planning for robots, path planning for character in games
+\end{overview}
+
+
+\begin{problem}{\pbname}
+	A$^*$ Algorithm is a graph traversal and path search algorithm used in weighted graphs. The algorithm starts from a start point, aims to find a path with the smallest cost to the given goal point.
+\end{problem}
+
+\subsection*{Description}
+% Detailed description of the problem; More detailed information on the input and complexity; more applications with details on how they relate to each other (if this is the case). Do not hardcode references,  instead use the {\tt \textbackslash label} and {\tt \textbackslash reference} commands.  Examples: citation~\cite{ve477}, a group of figures (Fig.~\ref{fig:\currfilebase_group}), a sub-figure (Fig.~\ref{fig:\currfilebase_a}). To display a new line skip a line in the source code, do not use {\tt \textbackslash\textbackslash}.
+\subsubsection*{Detail}
+\par We denote openSet as the set of nodes that have already been visited. Obviously, at first only the start point is in the openSet. At each loop, A$^*$ algorithm takes the node with the smallest path cost from the openSet. It determines the paths to extend the openSet and then goes into the next loop until it reaches the goal point. The path can be found by tracing path back from the goal point to the start point.
+\subsubsection*{Determine the path cost}
+\par Different from Dijkstra Algorithm, the path cost $f(n)$ is calculated as
+$$
+	f(n)=g(n)+h(n)
+$$
+\par where $g(n)$ represents the exact cost of the path from the start point to the vertex $n$, and $h(n)$ represents the heuristic estimated cost from vertex $n$ to the goal.
+\subsubsection*{Determin the heuristic}
+\par The performance of A$^*$ algorithm is affected by the choice of heuristic. It works as follows.
+\begin{itemize}
+	\item If $h(n) = 0$, $A^*$ Algorithm actually becomes Dijkstra Algorithm, which is guaranteed to find a shortest path.
+	\item If $h(n)$ is lower than (or equal to) the cost of moving from n to the goal, it's also guaranteed to find a shortest path. However, the lower $h(n)$ is, the more $A^*$ Algorithm will expand, the slower it will be.
+	\item If $h(n)$ is exactly the cost of moving from n to the goal, $A^*$ Algorithm will follow the best path, and speed up the performance.
+	\item If $h(n)$ is greater than (or equal to) the cost of moving from n to the goal, $A^*$ is not sure to find a shortest path, but it does take less time.
+	\item If $h(n)$ is relatively higher than $g(n)$, this turns into a Greedy Best-First-Search.
+\end{itemize}
+\par There is a problem that will considered in practical path planning but not discussed here. It is the choice between the compute speed and the accuracy of the shortest path. In such situation, the path needed is not necessarily to be the shortest path.
+\par One way to construct a heuristic is to precompute the length of the shortest path between every pair of points. Such way is not feasible in practical use where the graph could be extremely large. However, there are ways of approximation.
+\par The method that is commonly used in game design is to precompute the shortest path between any pair of waypoints. By waypoints, I mean a point along a path. For example, in many real-time strategy games, players can manually add path-specific waypoints by clicking. Then, use a new heuristic $h^{'}$ that estimates the cost from any location to its nearby waypoints.
+\par The final heuristic can be
+$$
+h(n)=h^{'}(n,w_1)+distance(w_1,w_2)+h^{'}(w_2,goal)
+$$
+\subsubsection*{Specified for my implementation}
+\par For simplicity, the graph in my implementation is square grid. The heuristic for square grid is the Manhattan distance between two points.~\cite{stanford}
+\par The Manhattan distance between points $x_1,y_1$ and $x_2,y_2$ is calculated as
+$$
+	D=|x_1-x_2|+|y_1-y_2|
+$$
+\subsubsection*{Time complexity}
+\par Denote $b$ as the branching factor, namely maximum number of successors of any node, $d$ as the depth of the shallowest goal
+node, namely the the length of the path from the start to the goal.~\cite{def} At first glance, the complexity can be expressed as $\mathcal{O}(b^d)$. However, $b$ is not constant during the algorithm.
+\par For problems with constant step costs, the effective branching factor $b$ can be analyzed in the absolute error or the relative error of the heuristic. The abosolute error is $\Delta \equiv h^*-h$, relative error $\epsilon \equiv (h^*-h)/h^*$~\cite{time}, where $h^*$ is the actual cost from the start to the goal. The absolute error $\epsilon$ is at least proportional to the pathcost $h^*$, so $\epsilon$ is constant or increasing. The time complexity is written as
+$$
+	T(n)= \mathcal{O}((b^{\epsilon})^d)
+$$
+\newpage
+\subsubsection*{Pseudocode}
+\begin{Algorithm}[A$^*$ Algorithm($G$,$start$,$goal$)\label{alg:\currfilebase}]
+\SetKwFunction{myFunc}{heuristic}
+\Input{The start point $start$, the goal point $goal$, a graph $graph$}
+\Output{The shortest path and its distance}
+\Fn{\myFunc{($a$,$b$)}}{
+	\Ret the cost of the cheapest path from $a$ to $b$.
+	\cmt{e.g. Manhattan distance for square grid}
+}
+\BlankLine
+Push $start$ into a priority queue $P$ with its pathCost 0 as the key \\
+\While{$\textbf{P}$ is not empty}{
+	Pop the top of $\textbf{P}$ and save it as $\textbf{x}$ \\
+	\If{$\textbf{x}$ is the goal point}{
+		break
+	}
+	\For{each $\textbf{x}$'s neighbor point $\textbf{n}$ in the graph that is not blocked}{
+		$tmpCost$ $=$ $x.pathCost$ + $n.cost$ \\
+		\If{$\textbf{n}$ is not visited $\textbf{or}$ $\textbf{tmpCost}$ $<$ $\textbf{n.cost}$}{
+			$n.cost$ $=$ $tmpCost$ \\
+			$val$ = $tmpCost$ + \myFunc($n$, $end$) \\
+			Push $\textbf{n}$ into $P$ with $\textbf{val}$ as the key \\
+			$n.prev$ $=$ $x$
+		}
+	}
+}
+$itr$ $=$ $goal$  \\
+$path$ $=$ $[]$  \\
+\While{$itr$ $\neq$ $start$}{
+	Push $itr$ to the front of $path$ \\
+	$itr$ $=$ $itr.prev$ 
+}
+\Ret $path$, $end.pathCost$
+\end{Algorithm}
+\singlespacing
+\newpage
+\printbibliography[title={References.},resetnumbers=true,heading=subbibliography]
+
+\end{document}

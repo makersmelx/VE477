@@ -1,0 +1,35 @@
+#
+# Content
+#
+
+- project477.sty: the project style file
+- problem-i.tex: file containing the work for problem i
+- problem-i_a.png: image used in problem i
+- catalog.tex: file used to compile the whole catalog into asingle file
+- authors.tex: file with the list of authors
+
+#
+# How to
+#
+
+1. select a problem to solve, e.g. 12
+2. create a corresponding problem-12.tex file, based on the two samples provided (12 and 78)
+3a. DO NOT ADD anything in the preamble of the problem tex file
+3b. DO NOT EDIT the style file
+3c. if you need special packages, please contact the teaching team
+4a. for tables follow the format in sample problem 78 (ie. use booktabs package)
+4b. for figures name the external files with respect to the problem they belong to and add _letter at the end, eg. problem-12_a.png, problem-12_b.png, etc.
+5. compile either each problem individually or the whole catalog
+6. if compilation fails, fix the code. files that fail compiling will be REJECTED
+
+#
+# bibliography
+#
+
+- for each problem create a .bib file, eg. problem12.bib
+- include all necessary reference
+- DO NOT COPY/PASTE the project content or you will be sent to HC
+
+WARNING: 
+- compilation is done using biblatex. ensure it is install on your computer
+- DO NOT USE bibtex for the bibliography
