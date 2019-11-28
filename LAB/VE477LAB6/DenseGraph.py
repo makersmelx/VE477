@@ -53,6 +53,9 @@ class DenseGraph:
             for edge_joint in self.edges:
                 del edge_joint[u_id]
 
+    def get_edge(self, u, v):
+        return self.edges[u][v]
+
     def is_adjacent(self, u, v):
         u: str
         v: str
