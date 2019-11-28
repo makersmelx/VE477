@@ -1,0 +1,164 @@
+\documentclass[12pt,a4paper]{article}
+%\usepackage{ctex}
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage{amsmath,amscd,amsbsy,amssymb,latexsym,url,bm,amsthm}
+\usepackage{epsfig,graphicx,subfigure}
+\usepackage{enumitem,balance}
+\usepackage{wrapfig}
+\usepackage{mathrsfs,euscript}
+\usepackage[usenames]{xcolor}
+\usepackage[colorlinks,linkcolor = blue]{hyperref}
+\usepackage[vlined,ruled,commentsnumbered,linesnumbered]{algorithm2e}
+\usepackage{listings}
+\usepackage[utf8]{inputenc}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{exercise}{Exercise}
+\newtheorem*{solution}{Solution}
+\newtheorem{definition}{Definition}
+\theoremstyle{definition}
+
+
+%\numberwithin{equation}{section}
+%\numberwithin{figure}{section}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\newcommand{\postscript}[2]
+ {\setlength{\epsfxsize}{#2\hsize}
+  \centerline{\epsfbox{#1}}}
+
+\renewcommand{\baselinestretch}{1.0}
+
+\setlength{\oddsidemargin}{-0.365in}
+\setlength{\evensidemargin}{-0.365in}
+\setlength{\topmargin}{-0.3in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textheight}{10.1in}
+\setlength{\textwidth}{7in}
+\makeatletter \renewenvironment{proof}[1][Proof] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+\makeatletter
+\renewenvironment{solution}[1][Solution] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+\SetKwProg{Fn}{Function}{\string:}{end}
+
+\usepackage{color}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+ 
+\lstdefinestyle{mystyle}{  
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    frame=shadowbox
+}
+\lstset{style=mystyle}
+
+\title{VE477 HW 6}
+\author{Wu Jiayao 517370910257}
+
+\begin{document}
+\maketitle
+\section{Perfect matching in a bipartite graph}
+\subsection{Proof}
+Suppose that matrix A has m rows and n columns. m = n. Denote $M^1_{i,j}$ the minor $M_{i,j}$ of A, $M^{k}_{i,j}$ as the minor $M_{i,j}$ of $M^{k-1}$
+\begin{enumerate}
+    \item If the determinant is identically zero. Suppose there is a perfect matching, then for every row in A, there is only one element that has a value 1, denote as $a_{i_x,j_x}$ for $x^{th}$ row. The determinant of A is expressed as
+    \begin{align*}
+        det(A) &= (-1)^{i_1+j_1} \cdot M^{1}_{i_1,j_1} + 0 \times (n-1) \\
+        &= (-1)^{i_1+j_1+i_2+j_2} \cdot M^{2}_{i_2}{j_2} + 0 \times (n-2)\\
+        &= \cdots \\
+        &= (-1)^{i_1+j_1+\cdots+i_{m-1}+j_{m-1}} \cdot M^{m-1}_{i_{m-1},j_{m-1}} \\
+        &= (-1)^{x} \neq 0
+    \end{align*}
+    Since $M^{m-1}_{i_{m-1},j_{m-1}}$ is 1, as it represents in the perfect matching the match of the $(m-1)^{th}$ vertex in L, such leads to a contradiction. Hence there is no perfect matching.
+    \item If G has no perfect matching, there is at least one vertex in L that has no vertext in R to match, which means that there exists at least one row in A that is all 0. The determinant is identically zero in this condition.
+\end{enumerate}
+\subsection{Algorithm}
+Use the maximum matching algorithm described in the lecture. \\
+\begin{algorithm}[H]
+    \Input{a bipartite graph $G \langle V,E \rangle$, $V = L \cup R$}
+    \Output{Whether it has a perfect matching}
+    Add $s$ and $t$ \\
+    Connect $s$ with all vertice in $L$ with capacity 1 \\
+    Connect $t$ with all vertice in $R$ with capacity 1 \\
+    \For{each edge in $G$}{
+        Its capacity is 1 
+    }
+    h = Ford - Fulkson(G) \\
+    \If{$h =|R|$}{
+        \Return true
+    }
+    \Return false
+\end{algorithm}
+\subsection{Complexity and error probability}
+The complexity is $\mathcal{O}(|V||E|)$. Since the existence of perfect matching matches the maximum of flows, the algorithm is always correct, with 0\% of error probability.
+\subsection{Usefulness}
+It is correct. It has a resonable time complexity.
+\section{Critical Thinking}
+\subsection{The middle node}
+\begin{algorithm}[H]
+    \Input{A singly linked list}
+    \Output{The middle node}
+    $slow$ $=$ the first node of the singly linked list \\
+    $fast$ $=$ $slow \rightarrow next$ \\
+    \While{$fast$ is not the last node of the singly linked list}{
+        $slow$ $=$ $slow \rightarrow next$ \\
+        $fast$ $=$ $fast \rightarrow next \rightarrow next$ \\
+    }
+    \Return $slow$
+\end{algorithm}
+\subsection{The cycle}
+\begin{algorithm}[H]
+    \Input{A singly linked list}
+    \Output{If there is a cycle}
+    $slow$ $=$ the first node of the singly linked list \\
+    $fast$ $=$ $slow \rightarrow next$ \\
+    \While{$fast$ is not the last node of the singly linked list}{
+        \If{$fast\ ==\ slow$}{
+            \Return True
+        }
+        $slow$ $=$ $slow \rightarrow next$ \\
+        $fast$ $=$ $fast \rightarrow next \rightarrow next$ \\
+    }
+    \Return False
+\end{algorithm}
+The complexity is $\mathcal{O}(n)$, where $n$ is the length of the singly linked node.
+\section{The coupon collector desillusion}
+\subsection{How many boxes}
+At least n.
+\subsection{Not finished}
+\subsection{Expectation}
+$$
+E[X]=\sum_{i=1}^{n} \frac{n}{i}=n \sum_{i=1}^{n} \frac{1}{i} \approx n \int_{1}^{n} \frac{1}{x} d x=n \log n
+$$
+It can be concluded that $E[X]=\Theta(n\log n)$
+\subsection{Coupon collector}
+The more boxes you have already owned, the more boxes you expect to buy (the bigger expectation) to collect a new boxes.
+% \section*{Reference}
+% {\noindent [1] \url{cs.nthu.edu.tw/~wkhon/toc07-lectures/lecture21.pdf}}
+\end{document}
