@@ -1,0 +1,213 @@
+\documentclass[12pt,a4paper]{article}
+%\usepackage{ctex}
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage{amsmath,amscd,amsbsy,amssymb,latexsym,url,bm,amsthm}
+\usepackage{epsfig,graphicx,subfigure}
+\usepackage{enumitem,balance}
+\usepackage{wrapfig}
+\usepackage{mathrsfs,euscript}
+\usepackage[usenames]{xcolor}
+\usepackage[colorlinks,linkcolor = blue]{hyperref}
+\usepackage[vlined,ruled,commentsnumbered,linesnumbered]{algorithm2e}
+\usepackage{listings}
+\usepackage[utf8]{inputenc}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{exercise}{Exercise}
+\newtheorem*{solution}{Solution}
+\newtheorem{definition}{Definition}
+\theoremstyle{definition}
+
+
+%\numberwithin{equation}{section}
+%\numberwithin{figure}{section}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\newcommand{\postscript}[2]
+ {\setlength{\epsfxsize}{#2\hsize}
+  \centerline{\epsfbox{#1}}}
+
+\renewcommand{\baselinestretch}{1.0}
+
+\setlength{\oddsidemargin}{-0.365in}
+\setlength{\evensidemargin}{-0.365in}
+\setlength{\topmargin}{-0.3in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textheight}{10.1in}
+\setlength{\textwidth}{7in}
+\makeatletter \renewenvironment{proof}[1][Proof] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+\makeatletter
+\renewenvironment{solution}[1][Solution] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+\SetKwProg{Fn}{Function}{\string:}{end}
+
+\usepackage{color}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+ 
+\lstdefinestyle{mystyle}{  
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    frame=shadowbox
+}
+\lstset{style=mystyle}
+
+\title{VE477 HW 8}
+\author{Wu Jiayao 517370910257}
+
+\begin{document}
+\maketitle
+% \section*{Reference}
+% {\noindent [1] \url{cs.nthu.edu.tw/~wkhon/toc07-lectures/lecture21.pdf}}
+\section{EX.1}
+\section*{Part I. Fast multi-point evaluation}
+\subsection{Draw}
+\begin{figure}[h]
+  \includegraphics[width=0.7\textwidth,angle=90]{1.jpg}
+\end{figure}
+\subsection{Prove}
+\begin{align*}
+  M_{i+1,j}&=\prod_{l=0}^{2^{i+1}-1}m_{j\cdot 2^{i+1}+l} \\
+          &=\prod_{l=0}^{2^{i}-1}m_{j\cdot 2^{i+1}+l} \cdot \prod_{l=2^i}^{2^{i+1}-1}m_{j\cdot 2^{i+1}+l} \\
+          &=\prod_{l=0}^{2^{i}-1}m_{2j\cdot 2^{i}+l} \cdot \prod_{l=0}^{2^{i}-1}m_{2j\cdot 2^{i}+l+2^{i}} \\
+          &=\prod_{l=0}^{2^{i}-1}m_{2j\cdot 2^{i}+l} \cdot \prod_{l=0}^{2^{i}-1}m_{(2j+1)\cdot 2^{i}+l} \\
+          &= M_{i,2j}M_{i,2j+1}
+\end{align*}
+\begin{align*}
+  M_{0,j}=\prod_{l=0}^{0}m_{j+0}=m_j
+\end{align*}
+\subsection{Relate}
+  The parent is the product of its two child. $M_i,j$ has a depth $k-i$.
+\subsection{Evaluation}
+  \subsubsection{Subtree}
+    \begin{algorithm*}[H]
+      \caption{Polynomial}
+      \Input{$X,k,\{u_0,u_1,\cdots,u_{n-1}\}$}
+      \Output{$M_{i,j}$}
+      \For{$j=0$ to $n-1$}{
+        $M_{0,j} = X-u_i$
+      }
+      \For{$i=1$ to $k$}{
+        \For{$j=0$ to $2^{k-i}-1$}{
+          $M_{i,j}=M_{i-1,2j}+M_{i-1,2j+1}$
+        }
+      }
+      \Return $M_{i,j}$
+    \end{algorithm*}
+  \subsubsection{}
+  \begin{algorithm*}[H]
+    \caption{$Down(f,k,i,M)$}
+    \Input{P,$k,\{u_0,u_1,\cdots,u_{n-1}\},M_{i,j}$}
+    \Output{$\{P(u_0),P(u_1),\cdots,P(u_{n-1})\}$}
+      \If{$i==0$}{
+        \Return f
+      }
+      $left \gets f\ mod\ M_{k-1,2i}$ \\ 
+      $right \gets f\ mod\ M_{k-1,2i+1}$ \\ 
+      $left\_part \gets Down(left,k-1,2i,M)$ \\ 
+      $right\_part \gets Down(right,k-1,2i+1,M)$ \\ 
+      \Return $\{left\_part,right\_part\}$
+  \end{algorithm*}
+  \begin{algorithm*}[H]
+    \caption{The algorithm}
+    \Input{P,$k,\{u_0,u_1,\cdots,u_{n-1}\},M_{i,j}$}
+    \Output{$\{P(u_0),P(u_1),\cdots,P(u_{n-1})\}$}
+    \Return $Down(P,k,0)$
+  \end{algorithm*}
+\subsection{Complexity and Correctness}
+The time complexity for constructing the subtree is $\mathcal{O}(M(n)\log n)$. The complexity of evaluation is 
+$$
+  T(n)= 2 T(n/2) + O(M(n))
+$$
+Hence, time complexity is $\mathcal{O}(M(n)\log n)$.
+\section*{Fast Interpolation}
+\subsection{Explain}
+Omitted
+\subsection{Prove}
+$m^{'} = \sum_{i=0}^{n-1}(X-u_i)^{'} \frac{m}{X-u_i} = \sum_{i=0}^{n-1}\frac{m}{X-u_i}$. All coefficients of $(X-u_i)$ will be zero in $m'$, the only term remains is $1/s_i$ 
+\subsection{Algorithm}
+\begin{algorithm*}[H]
+  \caption{$Up(f,k,i,M)$}
+  \Input{P,$k,\{u_0,u_1,\cdots,u_{n-1}\},M_{i,j}$}
+  \Output{$\{P(u_0),P(u_1),\cdots,P(u_{n-1})\}$}
+    \If{$i==0$}{
+      \Return $\{P(u_0),P(u_1),\cdots,P(u_{n-1})\}$
+    }
+    $left \gets Up(left,k-1,2i,M)$ \\ 
+    $right \gets Up(right,k-1,2i+1,M)$ \\ 
+    \Return $left\times M_{k,1} + right \times M_{k,0}$
+\end{algorithm*}
+\begin{algorithm*}[H]
+  \caption{The algorithm}
+  \Input{P,$k,\{u_0,u_1,\cdots,u_{n-1}\},M_{i,j}$}
+  \Output{$\{P(u_0),P(u_1),\cdots,P(u_{n-1})\}$}
+  \Return $Up(P,k,0)$
+\end{algorithm*}
+\subsection{Complexity and Correctness}
+The time complexity for constructing the subtree is $\mathcal{O}(M(n)\log n)$. The complexity of evaluation is 
+$$
+  T(n)= 2 T(n/2) + O(M(n))
+$$
+Hence, time complexity is $\mathcal{O}(M(n)\log n)$.
+\subsection{Possibility}
+More space should be set to do this calculation. If the memory space is allowed, there is Possibility.
+\section{Critical Thinking}
+\subsection{Prove}
+Omitted
+
+\subsection{ve477}
+Let the value given to $S_1$ is $v_1$, $S_2$ is $v_2$.
+\begin{itemize}
+  \item “I’m not surprised, I knew you couldn’t know!”. \\ Let S be a property of a number. A number $n$ with property S means that $\forall x<y$ that $x+y=n$, at least one of $x,y$ is not prime. \\ $v_1$ should be smaller than 54, otherwise, if $v_2$ is exactly $53n$, $S_2$ can know the value. All the even number can be ignored since they can be expressed as the sum of two primes. \\ For the left odd number, such numbers have property S.
+  $$
+    11,17,23,27,29,35,37,41,47,51,53
+  $$
+  \item “Uhm…so now I know…” \\
+  $\forall x,y$ that $xy=v_2$, there exists exactly one $x,y$ such that $x+y$ has property S.
+  \item “So do I!” \\ $v_1$ should not be in $2^n+p$ by 2 ways, where $p$ is a prime. Otherwise, when $S_2$ is sure to get an answer, $S_1$ still needs more information, $v_1=2^{n_1}+p_1$ or $v_1=2^{n_2}+p_2$
+  The left number is 
+  $$
+    17,29,41,53
+  $$
+  For 17, $17=4+13$, only one possible solution.\\
+  For 29, $29=2+27=4+25$, that have two posiible solutions, so they cannot know still. \\
+  For 41, $41=4+37=10+31$, that also cannot know. \\
+  For 53, $53=6+47=16+37$. \\ still not know.
+  Hence, the only is $4,13$.
+\end{itemize}
+\subsection{Ants}
+When they collide, actually nothing happens, they just continue their walking as ants since every ant is the same. The maxium time should be $1$s.
+
+\section{IDEA}
+\begin{figure}[h]
+  \centering
+  \includegraphics[]{idea.png}
+  
+\end{figure}
+\end{document}
