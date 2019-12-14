@@ -4,6 +4,10 @@
 
 This is the repository for course work and course material in VE477: Intro to Algorithm in UM-SJTU Joint Institute.  Only work that has passed submission deadline will be uploaded at present.
 
+## Kind reminder
+
+The exams have few, or maybe fewer than you think about "few", relations with the slides, the lecture. When writing labs with python, it is VE477. When doing projects, it is VR477. When exams, it is VV477. Bad for guys with poor math, like me.
+
 ## About Honor Code
 
 - If there are same questions or labs in the future, it is the responsibility of JI students not to copy or modify these codes, or TeX files because it is against the Honor Code. 
