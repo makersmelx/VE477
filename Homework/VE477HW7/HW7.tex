@@ -1,0 +1,239 @@
+\documentclass[12pt,a4paper]{article}
+%\usepackage{ctex}
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage{amsmath,amscd,amsbsy,amssymb,latexsym,url,bm,amsthm}
+\usepackage{epsfig,graphicx,subfigure}
+\usepackage{enumitem,balance}
+\usepackage{wrapfig}
+\usepackage{mathrsfs,euscript}
+\usepackage[usenames]{xcolor}
+\usepackage[colorlinks,linkcolor = blue]{hyperref}
+\usepackage[vlined,ruled,commentsnumbered,linesnumbered]{algorithm2e}
+\usepackage{listings}
+\usepackage[utf8]{inputenc}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{exercise}{Exercise}
+\newtheorem*{solution}{Solution}
+\newtheorem{definition}{Definition}
+\theoremstyle{definition}
+
+
+%\numberwithin{equation}{section}
+%\numberwithin{figure}{section}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\newcommand{\postscript}[2]
+ {\setlength{\epsfxsize}{#2\hsize}
+  \centerline{\epsfbox{#1}}}
+
+\renewcommand{\baselinestretch}{1.0}
+
+\setlength{\oddsidemargin}{-0.365in}
+\setlength{\evensidemargin}{-0.365in}
+\setlength{\topmargin}{-0.3in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textheight}{10.1in}
+\setlength{\textwidth}{7in}
+\makeatletter \renewenvironment{proof}[1][Proof] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+\makeatletter
+\renewenvironment{solution}[1][Solution] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+\SetKwProg{Fn}{Function}{\string:}{end}
+
+\usepackage{color}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+ 
+\lstdefinestyle{mystyle}{  
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    frame=shadowbox
+}
+\lstset{style=mystyle}
+
+\title{VE477 HW 7}
+\author{Wu Jiayao 517370910257}
+
+\begin{document}
+\maketitle
+\section{Karger-Stein’s Algorithm}
+\subsection{Proof}
+$$
+P = \frac{\binom{t}{2}}{\binom{|V|}{2}} \geq \frac{1}{\binom{|V|}{2}} > \frac{1}{\binom{6}{2}} = \frac{1}{15}
+$$
+\subsection{Show}
+$$
+p_0 = 1/15
+$$
+\begin{align*}
+    P(t) &= 1-\left(1-\frac{1}{2} P\left(\frac{t}{\sqrt{2}}\right)\right)^{2} \\
+        &= P(\frac{t}{\sqrt{2}}) - \frac{1}{4}P(\frac{t}{\sqrt{2}})^2
+\end{align*}
+$p_0 = 1/15$, $p_k=P(\frac{t}{\sqrt{2}})$, $p_{k+1}=P(t)$.
+\subsection{}
+$$
+z_0 = 4/p_k-1=60-1=59
+$$
+\begin{align*}
+    z_{k+1} &= 4/p_{k+1} -1 \\
+            &= \frac{4}{p_k-\frac{1}{4}p_k^2} - 1 \\
+            &= \frac{16-2(4-p_k)p_k}{(4-p_k)p_k} + 1 \\
+            &= \frac{(4-p_k)^2+p_k^2}{(4-p_k)p_k}+1\\
+            &= \frac{4-p_k}{p_k} + \frac{p_k}{4-p_k} + 1 \\
+            &= z_k + \frac{1}{z_k} + 1
+\end{align*}
+\subsection{}
+Omit
+\subsection{}
+We can conclude that $k \leq 2\log_2n+\mathcal{O}(1)$
+\begin{align*}
+    k < z_k &< 59+2k \\
+    \log_2n + 1< \frac{4}{p_k} - 1 &< 59 + 4\log_2n+\mathcal{O}(1) \\ 
+    \frac{1}{\log_2n+\mathcal{O}(1)} < p_k &< \frac{4}{\log_2n+\mathcal{O}(1)}
+\end{align*}
+Hence, $p_k=\Omega(1/\log n)$   
+
+\section{Simplex Problem}
+\subsection{Tableaux}
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|c|c|cccccc|c|}
+    \hline
+    &z & $x_1$ & $x_2$ & $x_3$ & $s_1$ & $s_2$ & $s_3$  &    \\ \hline
+    $R_0$&1 & -3 & -1 & -2 & 0  & 0  & 0   & 0  \\
+    $R_1$&0 & 1  & 1  & 3  & 1  & 0  & 0   & 30 \\
+    $R_2$&0 & 2  & 2  & 5  & 0  & 1  & 0   & 24 \\
+    $R_3$&0 & 4  & 1  & 2  & 0  & 0  & 1   & 36 \\ \hline
+    \end{tabular}
+    \caption{Initialization}
+\end{table}
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|c|c|cccccc|c|}
+    \hline
+    & z & $x_1$ & $x_2$ & $x_3$ & $s_1$ & $s_2$ & $s_3$  &    \\ \hline
+    $4\times R_0+3 \times R_3$& 4 & 0 & -1 & -2 & 0  & 0  & 3   & 108  \\
+    $4 \times R_1 - R_3$& 0 & 0  & 3  & 10  & 4  & 0  & -1   & 84 \\
+    $2 \times R_2-R_3$& 0 & 0  & 3  & 8  & 0  & 2  & -1   & 12\\
+    $R_3$& 0 & 4  & 1  & 2  & 0  & 0  & 1   & 36 \\ \hline
+    \end{tabular}
+    \caption{Follow the rule of simplex method to remove the biggest restriction $x_1$}
+\end{table}
+$R_2$ is the tightest with the maximum $A_{i3}/s_i$\\
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|c|c|cccccc|c|}
+    \hline
+    & z & $x_1$ & $x_2$ & $x_3$ & $s_1$ & $s_2$ & $s_3$  &    \\ \hline
+    $4\times R_0+R_2$& 16 & 0 & -1 & 0 & 4  & 0  & 11   & 444  \\
+    $4 \times R_1 - 5 \times R_2$& 0 & 0  & -3 & 0  & 4  & -10  & 1   & 276 \\
+    $5 \times R_2-4\times R_1$& 0 & 0  & 3  & 8  & 0  & 2  & -1   & 12 \\
+    $4 \times R_3-R_2$& 0 & 16  & 1  & 0  & 0  & -2  & 5   & 132 \\ \hline
+    \end{tabular}
+    \caption{Follow the rule of simplex method to remove the biggest restriction $x_3$}
+\end{table}
+\newpage
+\par $R_2$ is the tightest with the maximum $A_{i2}/s_i$. 
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|c|c|cccccc|c|}
+    \hline
+    & z & $x_1$ & $x_2$ & $x_3$ & $s_1$ & $s_2$ & $s_3$  &    \\ \hline
+    $3\times R_0+2 \times R_2$& 48 & 0 & 0 & 8 & 0  & 8  & 32  & 1344  \\
+    $R_1 + R_2$& 0 & 0  & 0  & 8  & 4  & -8  & 0   & 720 \\
+    $R_2$& 0 & 0  & 3  & 8  & 0  & 2  & -1   & 12 \\
+    $3 \times R_3-R_2$& 0 & 48  & 0  & -8  & 0  & -8  & 16   & 384 \\ \hline
+    \end{tabular}
+    \caption{Follow the rule of simplex method to remove the biggest restriction $x_2$}
+\end{table}
+\par The optimal solution for $z$ is
+$$
+z = \frac{1344}{16} = 28
+$$
+
+\subsection{Geometric}
+It means to find the optimized vertex in the convex polyhedron bounded by given constraints in an n-dimension space. The simplex method indicates how to find the next optimized result and when to halt when the best solution is found.
+\section{Critical Thinking}
+\par It works like this.
+\par There are two arrays, one to store numbers, called \textbf{st}, one to store the location of the minimum element, called \textbf{min\_loc}.
+\par When \textbf{top}, return the last element of \textbf{st}.
+\par When \textbf{get\_min}, return $st[min\_loc.back]$.
+\par When \textbf{push}, push the element $x$ to the back of \textbf{st}. If $x$ is smaller than the minimum element or $x$ is the first element in the stack, push $st.size-1$ to the back of \textbf{min\_loc}.
+\par When \textbf{pop}, pop the last element from \textbf{st}. After pop, if the last element of \textbf{min\_loc} equals the $st.size$, pop the last element of \textbf{min\_Loc}. 
+\par C++ code is like.
+\begin{lstlisting}[language=c++]
+    vector<int> st;
+    vector<int> min_loc;
+    int min;
+    void push(int x) {
+        st.push_back(x);
+        if(min_loc.empty() || x < st[min_loc.back()])
+        {
+            min_loc.push_back(st.size()-1);
+        }
+    }
+    
+    void pop() {
+        st.pop_back();
+        if(min_loc.back() == st.size())
+        {
+            min_loc.pop_back();
+        }
+    }
+    
+    int top() {
+        return st.back();
+    }
+    
+    int getMin() {
+        return st[min_loc.back()];
+    }
+\end{lstlisting}
+\section{Farka’s lemma}
+\begin{enumerate}
+    \item If $M x \leq 0 \text { and } V^{T} x>0$, suppose that $M^{T} y=V\ and\ y \geq 0$. Then,
+    \begin{align*}
+        V^T x &= (M^T y)^T x \\
+            &= y^TMx \\
+            &=y^T(Mx) \leq 0 
+    \end{align*}
+    Since $Mx$ is a m-vector, $y^T\geq 0 \equiv y \geq 0$, this leads to a contradiction. Hence ,when $M x \leq 0 \text { and } V^{T} x>0$, $M^{T} y=V\ and\ y \geq 0$ is false
+    \item If $M^{T} y=V\ and\ y \geq 0$, suppose that $M x \leq 0 \text { and } V^{T} x>0$. Then,
+    \begin{align*}
+        V^T x &= (M^T y)^T x \\
+            &= y^TMx \\
+            &=y^T(Mx) > 0 
+    \end{align*}
+    Since $Mx$ is a m-vector, $y^T\geq 0 \equiv y \geq 0$, we can conclude that $Mx > 0$, which leads to a contradiction.
+    Hence ,when $M^{T} y=V\ and\ y \geq 0$, $M x \leq 0 \text { and } V^{T} x>0$ is false.
+\end{enumerate}
+% \section*{Reference}
+% {\noindent [1] \url{cs.nthu.edu.tw/~wkhon/toc07-lectures/lecture21.pdf}}
+\end{document}
